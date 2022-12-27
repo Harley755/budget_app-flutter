@@ -112,4 +112,9 @@ class ViewModel extends ChangeNotifier {
           context, error.toString().replaceAll(RegExp('\\[.*?\\]'), ''));
     });
   }
+
+  // LOGOUT
+  Future<void> logout() async {
+    await _auth.signOut();
+  }
 }

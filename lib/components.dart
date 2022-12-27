@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/svg.dart';
 
+// OPENSANS
 class OpenSans extends StatelessWidget {
   final text;
   final size;
@@ -28,6 +31,34 @@ class OpenSans extends StatelessWidget {
   }
 }
 
+class Poppins extends StatelessWidget {
+  final text;
+  final size;
+  final color;
+  final fontWeight;
+
+  const Poppins({
+    super.key,
+    @required this.text,
+    @required this.size,
+    this.color,
+    this.fontWeight,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text.toString(),
+      style: GoogleFonts.poppins(
+        fontSize: size,
+        color: color == null ? Colors.black : color,
+        fontWeight: fontWeight == null ? FontWeight.normal : fontWeight,
+      ),
+    );
+  }
+}
+
+// DIALOGUE BOX
 DialogueBox(BuildContext context, String title) {
   return showDialog(
     context: context,
@@ -57,4 +88,28 @@ DialogueBox(BuildContext context, String title) {
       ],
     ),
   );
+}
+
+class UrlLaunch extends StatelessWidget {
+  final String url;
+  final String iconSvg;
+  final colorSvg;
+  const UrlLaunch({
+    super.key,
+    required this.url,
+    required this.iconSvg,
+    this.colorSvg,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () async => await launchUrl(Uri.parse(url)),
+      icon: SvgPicture.asset(
+        iconSvg,
+        color: colorSvg == null ? Colors.black : colorSvg,
+        width: 35.0,
+      ),
+    );
+  }
 }
