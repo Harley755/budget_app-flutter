@@ -9,6 +9,16 @@ class ExpenseViewMobile extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModelProvider = ref.watch(viewModel);
     double deviceWidth = MediaQuery.of(context).size.width;
+
+    int totalExpense = 0;
+    int totalIncome = 0;
+
+    void calculate() {
+      for (int i = 0; i < viewModelProvider.expensesAmount.length; i++) {
+        
+      }
+    }
+
     return SafeArea(
       child: Scaffold(),
     );

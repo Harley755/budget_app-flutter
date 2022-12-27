@@ -1,4 +1,3 @@
-
 import 'package:budget_app_starting/components.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +9,17 @@ final viewModel =
     ChangeNotifierProvider.autoDispose<ViewModel>((ref) => ViewModel());
 
 class ViewModel extends ChangeNotifier {
+  var logger = Logger();
+
   final _auth = FirebaseAuth.instance;
   bool isSignedIn = false;
   bool isObscure = true;
-  var logger = Logger();
+
+  List expensesName = [];
+  List expensesAmount = [];
+
+  List incomesName = [];
+  List incomesAmount = [];
 
   // 1- CHECK IF SIGNED IN
   Future<void> isLoggedIn() async {
