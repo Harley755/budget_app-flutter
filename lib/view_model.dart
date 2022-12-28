@@ -1,6 +1,7 @@
 import 'package:budget_app_starting/components.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -116,5 +117,14 @@ class ViewModel extends ChangeNotifier {
   // LOGOUT
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  // DATABASE
+  Future addExpense(BuildContext context) async {
+    final formKey = GlobalKey<FormState>();
+    TextEditingController controllerName = TextEditingController();
+    TextEditingController controllerAmount = TextEditingController();
+    return await showDialog(
+        context: context, builder: (BuildContext context) => AlertDialog());
   }
 }
