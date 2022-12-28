@@ -4,7 +4,6 @@ import 'package:budget_app_starting/components.dart';
 import 'package:budget_app_starting/view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 bool isLoading = true;
 
@@ -110,7 +109,7 @@ class ExpenseViewMobile extends HookConsumerWidget {
           actions: [
             IconButton(
               onPressed: () {
-                /// reset funtion
+                viewModelProvider.reset();
               },
               icon: Icon(Icons.refresh),
             )
