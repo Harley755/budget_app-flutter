@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:budget_app_starting/components.dart';
 import 'package:budget_app_starting/view_model.dart';
 import 'package:flutter/material.dart';
