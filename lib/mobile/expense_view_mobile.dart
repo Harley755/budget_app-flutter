@@ -128,6 +128,7 @@ class ExpenseViewMobile extends HookConsumerWidget {
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Poppins(
                             text: "Budget left",
@@ -189,7 +190,6 @@ class ExpenseViewMobile extends HookConsumerWidget {
                   height: 40.0,
                   width: 155.0,
                   child: MaterialButton(
-                    onPressed: () async {},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -210,9 +210,133 @@ class ExpenseViewMobile extends HookConsumerWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
+                    onPressed: () async {
+                      await viewModelProvider.addExpense(context);
+                    },
                   ),
-                )
+                ),
+
+                SizedBox(width: 10.0),
+
+                // ADD INCOMES
+                SizedBox(
+                  height: 40.0,
+                  width: 155.0,
+                  child: MaterialButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 15.0,
+                        ),
+                        OpenSans(
+                          text: "Add incomes",
+                          size: 14.0,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                    splashColor: Colors.grey,
+                    color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    onPressed: () async {
+                      await viewModelProvider.addIncome(context);
+                    },
+                  ),
+                ),
               ],
+            ),
+            SizedBox(height: 30.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // EXPENSE LIST
+                  Column(
+                    children: [
+                      OpenSans(text: "Expenses", size: 15.0),
+                      Container(
+                        padding: EdgeInsets.all(7.0),
+                        height: 210.0,
+                        width: 180.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          border: Border.all(width: 1.0, color: Colors.black),
+                        ),
+                        child: ListView.builder(
+                          itemCount: viewModelProvider.expensesAmount.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Poppins(
+                                  text: viewModelProvider.expensesName[index],
+                                  size: 12.0,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Poppins(
+                                    text:
+                                        viewModelProvider.expensesAmount[index],
+                                    size: 12.0,
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+
+                  // INCOME LIST
+                  Column(
+                    children: [
+                      OpenSans(
+                        text: "Incomes",
+                        size: 15.0,
+                        color: Colors.black,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(7.0),
+                        height: 210.0,
+                        width: 180.0,
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 1.0, color: Colors.black),
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                        ),
+                        child: ListView.builder(
+                          itemCount: viewModelProvider.incomesAmount.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Poppins(
+                                  text: viewModelProvider.incomesName[index],
+                                  size: 12.0,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Poppins(
+                                    text:
+                                        viewModelProvider.incomesAmount[index],
+                                    size: 12.0,
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
             )
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/svg.dart';
@@ -59,7 +60,7 @@ class Poppins extends StatelessWidget {
 }
 
 // DIALOGUE BOX
-DialogueBox(BuildContext context, String title) {
+DialogBox(BuildContext context, String title) {
   return showDialog(
     context: context,
     builder: (BuildContext context) => AlertDialog(
@@ -110,6 +111,65 @@ class UrlLaunch extends StatelessWidget {
         color: colorSvg == null ? Colors.black : colorSvg,
         width: 35.0,
       ),
+    );
+  }
+}
+
+class TextForm extends StatelessWidget {
+  final text;
+  final containerWidth;
+  final hintText;
+  final controller;
+  final digitsOnly;
+  final validator;
+  const TextForm({
+    super.key,
+    this.text,
+    this.containerWidth,
+    this.hintText,
+    this.controller,
+    this.digitsOnly,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        OpenSans(text: text, size: 14.0),
+        SizedBox(height: 5.0),
+        SizedBox(
+          width: containerWidth,
+          child: TextFormField(
+            validator: validator,
+            inputFormatters: digitsOnly != null
+                ? [FilteringTextInputFormatter.digitsOnly]
+                : [],
+            controller: controller,
+            decoration: InputDecoration(
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.teal),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.tealAccent, width: 2.0),
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              ),
+              hintStyle: GoogleFonts.poppins(fontSize: 13.0),
+              hintText: hintText,
+            ),
+          ),
+        )
+      ],
     );
   }
 }

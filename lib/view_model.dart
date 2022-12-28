@@ -1,4 +1,5 @@
 import 'package:budget_app_starting/components.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -13,6 +14,9 @@ class ViewModel extends ChangeNotifier {
   var logger = Logger();
 
   final _auth = FirebaseAuth.instance;
+  CollectionReference userCollection =
+      FirebaseFirestore.instance.collection("users");
+
   bool isSignedIn = false;
   bool isObscure = true;
 
@@ -53,7 +57,7 @@ class ViewModel extends ChangeNotifier {
         .then((value) => logger.d("Registration successful"))
         .onError((error, stackTrace) {
       logger.d("Registration error $error");
-      DialogueBox(
+      DialogBox(
         context,
         error.toString().replaceAll(RegExp('\\[.*?\\]'), ''),
       );
@@ -72,7 +76,7 @@ class ViewModel extends ChangeNotifier {
         .onError(
       (error, stackTrace) {
         logger.d("Login error: $error");
-        DialogueBox(
+        DialogBox(
           context,
           error.toString().replaceAll(RegExp('\\[.*?\\]'), ''),
         );
@@ -84,7 +88,7 @@ class ViewModel extends ChangeNotifier {
   Future<void> signInWithGoogleWeb(BuildContext context) async {
     GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
     await _auth.signInWithPopup(googleAuthProvider).onError(
-        (error, stackTrace) => DialogueBox(
+        (error, stackTrace) => DialogBox(
             context, error.toString().replaceAll(RegExp('\\[.*?\\]'), '')));
     logger
         .d("Current user is not empty = ${_auth.currentUser!.uid.isNotEmpty}");
@@ -94,7 +98,7 @@ class ViewModel extends ChangeNotifier {
   Future<void> signInWithGoogleMobile(BuildContext context) async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn()
         .signIn()
-        .onError((error, stackTrace) => DialogueBox(
+        .onError((error, stackTrace) => DialogBox(
             context, error.toString().replaceAll(RegExp('\\[.*?\\]'), '')));
 
     final GoogleSignInAuthentication? googleAuth =
@@ -109,8 +113,7 @@ class ViewModel extends ChangeNotifier {
       logger.d("Google successfully");
     }).onError((error, stackTrace) {
       logger.d("Google Sign in error $error");
-      DialogueBox(
-          context, error.toString().replaceAll(RegExp('\\[.*?\\]'), ''));
+      DialogBox(context, error.toString().replaceAll(RegExp('\\[.*?\\]'), ''));
     });
   }
 
@@ -125,6 +128,155 @@ class ViewModel extends ChangeNotifier {
     TextEditingController controllerName = TextEditingController();
     TextEditingController controllerAmount = TextEditingController();
     return await showDialog(
-        context: context, builder: (BuildContext context) => AlertDialog());
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        actionsAlignment: MainAxisAlignment.center,
+        contentPadding: EdgeInsets.all(32.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        title: Form(
+          key: formKey,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextForm(
+                text: "Name",
+                containerWidth: 130.0,
+                hintText: "Name",
+                controller: controllerName,
+                validator: (text) {
+                  if (text.toString().isEmpty) {
+                    return "Required";
+                  }
+                },
+              ),
+              SizedBox(width: 10.0),
+              TextForm(
+                text: "Amount",
+                containerWidth: 100.0,
+                hintText: "Amount",
+                controller: controllerAmount,
+                validator: (text) {
+                  if (text.toString().isEmpty) {
+                    return "Required";
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            child: OpenSans(
+              text: "Save",
+              size: 15.0,
+              color: Colors.white,
+            ),
+            splashColor: Colors.grey,
+            color: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                await userCollection
+                    .doc(_auth.currentUser!.uid)
+                    .collection("expenses")
+                    .add({
+                  "name": controllerName.text,
+                  "amount": controllerAmount.text
+                }).onError((error, stackTrace) {
+                  logger.d("Add expenses error = $error");
+                  return DialogBox(context, error.toString());
+                });
+                Navigator.pop(context);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ADD INCOME
+  Future addIncome(BuildContext context) async {
+    final formKey = GlobalKey<FormState>();
+    TextEditingController controllerName = TextEditingController();
+    TextEditingController controllerAmount = TextEditingController();
+
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        actionsAlignment: MainAxisAlignment.center,
+        contentPadding: EdgeInsets.all(32.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(width: 1.0, color: Colors.black),
+        ),
+        title: Form(
+          key: formKey,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextForm(
+                text: "Name",
+                containerWidth: 130.0,
+                hintText: "Name",
+                controller: controllerName,
+                validator: (text) {
+                  if (text.toString().isEmpty) {
+                    return "Required";
+                  }
+                },
+              ),
+              SizedBox(width: 10.0),
+              TextForm(
+                text: "Amount",
+                containerWidth: 130.0,
+                hintText: "Amount",
+                digitsOnly: true,
+                controller: controllerAmount,
+                validator: (text) {
+                  if (text.toString().isEmpty) {
+                    return "Required";
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            child: OpenSans(
+              text: "Save",
+              size: 15.0,
+              color: Colors.white,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            color: Colors.black,
+            splashColor: Colors.grey,
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                await userCollection
+                    .doc(_auth.currentUser!.uid)
+                    .collection("incomes")
+                    .add({
+                  "Name": controllerName.text,
+                  "Amount": controllerAmount.text,
+                }).then((value) {
+                  logger.d("Income added");
+                }).onError((error, stackTrace) {
+                  logger.d("Add income error = $error");
+                });
+                Navigator.pop(context);
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
