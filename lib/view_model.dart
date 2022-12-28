@@ -279,4 +279,34 @@ class ViewModel extends ChangeNotifier {
       ),
     );
   }
+
+  Future<void> expensesStream() async {
+    await for (var snapshot in userCollection
+        .doc(_auth.currentUser!.uid)
+        .collection("expenses")
+        .snapshots()) {
+      expensesAmount = [];
+      expensesName = [];
+      for (var expense in snapshot.docs) {
+        expensesName.add(expense.data()['name']);
+        expensesAmount.add(expense.data()['amount']);
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> incomesStream() async {
+    await for (var snapshot in userCollection
+        .doc(_auth.currentUser!.uid)
+        .collection("incomes")
+        .snapshots()) {
+      incomesName = [];
+      incomesAmount = [];
+      for (var income in snapshot.docs) {
+        incomesName.add(income.data()['Name']);
+        incomesAmount.add(income.data()['Amount']);
+        notifyListeners();
+      }
+    }
+  }
 }
