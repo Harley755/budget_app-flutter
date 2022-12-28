@@ -14,6 +14,12 @@ class ExpenseViewMobile extends HookConsumerWidget {
     final viewModelProvider = ref.watch(viewModel);
     double deviceWidth = MediaQuery.of(context).size.width;
 
+    if (isLoading) {
+      viewModelProvider.expensesStream();
+      viewModelProvider.incomesStream();
+      isLoading = false;
+    }
+
     int totalExpense = 0;
     int totalIncome = 0;
 
