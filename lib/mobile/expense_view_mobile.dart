@@ -101,6 +101,120 @@ class ExpenseViewMobile extends HookConsumerWidget {
           backgroundColor: Colors.black,
           centerTitle: true,
           title: Poppins(text: "Dashboard", color: Colors.white, size: 20),
+          actions: [
+            IconButton(
+              onPressed: () {
+                /// reset funtion
+              },
+              icon: Icon(Icons.refresh),
+            )
+          ],
+        ),
+        body: ListView(
+          children: [
+            SizedBox(height: 40.0),
+            Column(
+              children: [
+                Container(
+                  height: 240.0,
+                  width: deviceWidth / 1.5,
+                  padding: EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Poppins(
+                            text: "Budget left",
+                            size: 14.0,
+                            color: Colors.white,
+                          ),
+                          Poppins(
+                            text: "Total Expense",
+                            size: 14.0,
+                            color: Colors.white,
+                          ),
+                          Poppins(
+                            text: "Total Income",
+                            size: 14.0,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      RotatedBox(
+                        quarterTurns: 1,
+                        child: Divider(
+                          indent: 40.0,
+                          endIndent: 40.0,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Poppins(
+                            text: budgetLeft.toString(),
+                            size: 14.0,
+                            color: Colors.white,
+                          ),
+                          Poppins(
+                            text: totalExpense.toString(),
+                            size: 14.0,
+                            color: Colors.white,
+                          ),
+                          Poppins(
+                            text: totalIncome.toString(),
+                            size: 14.0,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 40.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // ADD EXPENSE
+                SizedBox(
+                  height: 40.0,
+                  width: 155.0,
+                  child: MaterialButton(
+                    onPressed: () async {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 15.0,
+                        ),
+                        OpenSans(
+                          text: "Add Expense",
+                          size: 14.0,
+                          color: Colors.white,
+                        )
+                      ],
+                    ),
+                    splashColor: Colors.grey,
+                    color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
         ),
       ),
     );
